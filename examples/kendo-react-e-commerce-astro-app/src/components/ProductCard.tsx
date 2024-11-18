@@ -3,9 +3,22 @@ import { ProductCardProps } from "../data/types";
 import { NumericTextBox, Rating } from "@progress/kendo-react-inputs";
 import { Button } from "@progress/kendo-react-buttons";
 
+import { useStore } from '@nanostores/react';
+import { selectedLanguage } from '../helpers/languageStore';
+import { loadMessages, LocalizationProvider } from '@progress/kendo-react-intl';
+import { messages } from '../data/messages'; 
+
+loadMessages(messages['en'], 'en');
+loadMessages(messages['fr'], 'fr');
+loadMessages(messages['es'], 'es');
+
 export const ProductCard = (props: ProductCardProps) => {
+  const language = useStore(selectedLanguage);
+  const t = messages[language] || messages['en'];
+  console.log('t.addToCartButtonText', t.addToCartButtonText)
+
   return (
-    <>
+    <LocalizationProvider language={language}>
       <section
         className="k-d-grid k-grid-cols-12 k-justify-content-center k-align-items-center k-col-span-12 k-gap-2"
         style={{
@@ -59,11 +72,11 @@ export const ProductCard = (props: ProductCardProps) => {
               value={1}
             ></NumericTextBox>
             <Button themeColor={"primary"} onClick={props.addToCart}>
-              Add to Cart
+              {t.addToCartButtonText}
             </Button>
           </div>
         </div>
       </section>
-    </>
+    </LocalizationProvider>
   );
 };

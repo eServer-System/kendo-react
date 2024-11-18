@@ -1,139 +1,126 @@
-import React from 'react';
-import { BackgroundImage } from '../components/BackgroundImage';
+import React from "react";
+import { useStore } from "@nanostores/react";
+import { selectedLanguage } from "../helpers/languageStore";
+import messages from "../data/messages";
+import { BackgroundImage } from "../components/BackgroundImage";
+import { Layout } from "../components/Layout";
+import { CategoryList } from "../components/CategoryList";
+import { CustomSection } from "../components/CustomizedSection";
+import { OrderedImgText } from "../components/OrderedImageCard";
+import { Testemonials } from "../components/Testemonials";
+import AdminView from "../components/AdminView";
 import model from "../assets/model_1.png";
-import { Layout } from '../components/Layout';
-import { CategoryList } from '../components/CategoryList';
-import { CardDescriptor } from "../data/types";
 import silverBraceletOnyx from "../assets/listViewImages/silverBraceletOnyx.png";
 import weddingBandsPearl from "../assets/listViewImages/weddingBandsPearl.png";
 import roseGoldEarringsOpal from "../assets/listViewImages/roseGoldEarringsOpal.png";
-import { CustomSection } from '../components/CustomizedSection';
-import { OrderedImgText } from '../components/OrderedImageCard';
-import homeModel2 from '../assets/homeModel2.png';
-import homeModel3 from '../assets/homeModel3.png';
-import homeWatch1 from '../assets/homeWatch1.png';
 import diamondWeddingRing from "../assets/listViewImages/diamondWeddingRing.png";
 import diamondWeddingBands from "../assets/listViewImages/diamondWeddingBands.png";
-import brownWatch from '../assets/brownWatch.jpg';
-import vitageWatch from '../assets/vitageWatch.jpg';
+import brownWatch from "../assets/brownWatch.jpg";
+import vitageWatch from "../assets/vitageWatch.jpg";
 import casualSilverWatch from "../assets/listViewImages/casualSilverWatch.png";
-import homeServicesImage from '../assets/homeServicesImage.png';
-import { Testemonials } from '../components/Testemonials';
-import { useAdminContext } from "../helpers/AdminContext";
-import AdminView from "../components/AdminView";
+import homeModel2 from "../assets/homeModel2.png";
+import homeModel3 from "../assets/homeModel3.png";
+import homeWatch1 from "../assets/homeWatch1.png";
 
-const data: CardDescriptor[] = [
+const data = [
   { img: silverBraceletOnyx, collectionText: "Silver Bracelet with Onyx" },
   { img: weddingBandsPearl, collectionText: "Wedding Bands with Pearls" },
-  { img: roseGoldEarringsOpal, collectionText: "Rose Gold Earrings with Opal" }
+  { img: roseGoldEarringsOpal, collectionText: "Rose Gold Earrings with Opal" },
 ];
 
-const ringsData: CardDescriptor[] = [
+const ringsData = [
   { img: diamondWeddingRing, collectionText: "Diamond Wedding Ring" },
-  { img: diamondWeddingBands, collectionText: "Diamond Wedding Bands" }
+  { img: diamondWeddingBands, collectionText: "Diamond Wedding Bands" },
 ];
 
-const watchData: CardDescriptor[] = [
+const watchData = [
   { img: brownWatch, collectionText: "Brown Leather Watch" },
   { img: casualSilverWatch, collectionText: "Casual Silver Watch" },
-  { img: vitageWatch, collectionText: "Vintage Silver Watch" }
+  { img: vitageWatch, collectionText: "Vintage Silver Watch" },
 ];
 
-const Home: React.FC = () => {
-  const { isAdmin } = useAdminContext();
-  const title = "Vilora Jewelry";
-  const subtitle = "we offer exquisite jewelry, each showcasing timeless elegance";
-  const buttonText = "See Collections";
+const Home = () => {
+  const [forceUpdate, setForceUpdate] = React.useState(0);
+const language = useStore(selectedLanguage);
+console.log(`selectedLanguage`,selectedLanguage)
+React.useEffect(() => {
+  setForceUpdate((prev) => prev + 1);
+  console.log("Language updated, forcing re-render:", language);
+}, [language]);
+  const t = messages[language];
+  console.log("Messages for Current Language:", messages[language]);
+  console.log("Resolved Translations Object:", t);
+  console.log("Title:", t.title);
+  console.log("Subtitle:", t.subtitle);
+  console.log("Button Text:", t.buttonText);
+  console.log('T', t)
 
+  console.log()
   return (
     <>
       <BackgroundImage
-        title={title}
-        subtitle={subtitle}
-        buttonText={buttonText}
+        title={t.title}
+        subtitle={t.subtitle}
+        buttonText={t.buttonText}
         img={model}
       />
-
-      {isAdmin ? (
-        <Layout>
-          <div className="k-mt-8"> 
-            <AdminView />
-          </div>
-        </Layout>
-      ) : (
-        <>
-          <Layout>
-            <section
-              className="k-d-grid k-grid-cols-12 k-justify-content-center k-align-items-center k-col-span-12"
-              style={{ paddingTop: "60px" }}
-            >
-              <CategoryList title='Our Bestsellers' subtitle='Enjoy an excellent selection of fine jewelry' data={data} />
-            </section>
-          </Layout>
-          <Layout>
-            <CustomSection>
-              <OrderedImgText
-                title='Timeless Classics'
-                subtitle='Get our unique handmade collections'
-                contentText='Jewelry enhances style and adds elegance, with each piece telling a unique story.'
-                img={homeModel2}
-                order='first'
-                link="Shop Now"
-                
-              />
-            </CustomSection>
-          </Layout>
-          <Layout>
-            <CustomSection>
-              <OrderedImgText
-                title='Fine Jewelry'
-                subtitle='Get our unique handmade collections'
-                contentText="Jewelry elevates one's style and brings sophistication, with every piece narrating a distinct tale."
-                img={homeModel3}
-                order='last'
-                link="Shop Now"
-              />
-            </CustomSection>
-          </Layout>
-          <Layout>
-            <CustomSection>
-              <CategoryList colSpan={6} title='Our Rings' subtitle='Enjoy an excellent selection of fine rings' data={ringsData} />
-            </CustomSection>
-          </Layout>
-          <Layout>
-            <CustomSection>
-              <OrderedImgText
-                title='Always On Time'
-                subtitle='Get our unique watches'
-                contentText='High-end gold watches for men are the epitome of luxury, combining precision with sophisticated craftsmanship.'
-                img={homeWatch1}
-                order='first'
-                link="Shop Now"
-              />
-            </CustomSection>
-          </Layout>
-          <Layout>
-            <CustomSection>
-              <CategoryList title='Our Watches' subtitle='Enjoy an excellent selection of watches' data={watchData} />
-            </CustomSection>
-          </Layout>
-          <Layout>
-            <CustomSection>
-              <OrderedImgText
-                title='Services'
-                subtitle='Explore expert repairs to elevate your experience'
-                contentText='Vilora provides services like custom designs, repairs, and appraisals to enhance the customer experience.'
-                img={homeServicesImage}
-                order='last'
-                link="Learn More"
-              />
-            </CustomSection>
-          </Layout>
-          <Layout>
-            <Testemonials />
-          </Layout>
-        </>
-      )}
+      <Layout>
+        <section>
+          <CategoryList
+            title={t.bestsellersTitle}
+            subtitle={t.bestsellersSubtitle}
+            data={data}
+          />
+        </section>
+      </Layout>
+      <Layout>
+        <CustomSection>
+          <OrderedImgText
+            title={t.timelessTitle}
+            subtitle={t.timelessSubtitle}
+            contentText={t.timelessContent}
+            img={homeModel2}
+            order="first"
+            link={t.buttonText}
+          />
+        </CustomSection>
+      </Layout>
+      <Layout>
+        <CustomSection>
+          <OrderedImgText
+            title={t.fineJewelryTitle}
+            subtitle={t.fineJewelrySubtitle}
+            contentText={t.fineJewelryContent}
+            img={homeModel3}
+            order="last"
+            link={t.buttonText}
+          />
+        </CustomSection>
+      </Layout>
+      <Layout>
+        <CustomSection>
+          <CategoryList
+            title={t.ringsTitle}
+            subtitle={t.ringsSubtitle}
+            data={ringsData}
+          />
+        </CustomSection>
+      </Layout>
+      <Layout>
+        <CustomSection>
+          <OrderedImgText
+            title={t.watchesTitle}
+            subtitle={t.watchesSubtitle}
+            contentText={t.servicesContent}
+            img={homeWatch1}
+            order="first"
+            link={t.buttonText}
+          />
+        </CustomSection>
+      </Layout>
+      <Layout>
+        <Testemonials />
+      </Layout>
     </>
   );
 };

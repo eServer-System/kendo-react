@@ -14,11 +14,22 @@ import { Button, ButtonGroup } from "@progress/kendo-react-buttons";
 import { layout2By2Icon, gridLayoutIcon } from "@progress/kendo-svg-icons";
 import { process, State } from "@progress/kendo-data-query";
 
+import { useStore } from '@nanostores/react';
+import { selectedLanguage } from '../helpers/languageStore';
+import { loadMessages, LocalizationProvider } from '@progress/kendo-react-intl';
+import messages from '../data/messages';
+
+loadMessages(messages['en'], 'en');
+loadMessages(messages['fr'], 'fr');
+loadMessages(messages['es'], 'es');
+
 export const AllProductsListView = () => {
-  const title = "Fine Selection";
-  const subtitle = "Enjoy the real craftsmanship";
-  const contentText =
-    "Jewelry is a meaningful form of self-expression that enhances personal style and adds beauty to any occasion.";
+  const language = useStore(selectedLanguage);
+  const t = messages[language] || messages['en'];
+
+  const title = t.allProductsTitle;
+  const subtitle = t.allProductsSubtitle;
+  const contentText = t.allProductsContentText;
   const order = "first";
 
   const [data, setData] = React.useState(listData);
@@ -31,64 +42,70 @@ export const AllProductsListView = () => {
   const cards: CardDescriptor[] = [
     {
       img: "/necklace_1.jfif",
-      collectionText: 'Collection "SERENE"',
+      collectionText: t.collectionSerene,
     },
     {
       img: "/ring_1.jfif",
-      collectionText: 'Collection "AURELIA"',
+      collectionText: t.collectionAurelia,
     },
     {
       img: "/1111.jfif",
-      collectionText: 'Collection "RAVINA"',
+      collectionText: t.collectionRavina,
     },
   ];
 
   const BreakcrumbData: DataModel[] = [
-    { text: "Home" },
-    { text: "Jewelry" },
+    { text: t.breadcrumbHome },
+    { text: t.breadcrumbJewelry },
   ];
 
   return (
-    <>
-      <Layout>
-        <section
-          className="k-d-grid k-grid-cols-12 k-justify-content-center k-align-items-center k-col-span-12"
-          style={{
-            paddingTop: "60px",
-          }}
-        >
-          <OrderedImgText
-            title={title}
-            subtitle={subtitle}
-            contentText={contentText}
-            img="/bracelets.png"
-            order={order}
-            link={null}
-          />
-        </section>
-      </Layout>
-      <Layout>
-        <CustomSection>
-          <CategoryList title="Our Collections" subtitle="Enjoy an excellent selection of fine jewelry" data={cards} />
-        </CustomSection>
-      </Layout>
-      <Layout>
-        <section className="k-d-flex k-justify-content-between">
-          <Breadcrumb data={BreakcrumbData} />
-          <ButtonGroup>
-            <Button fillMode={"flat"} svgIcon={gridLayoutIcon} />
-            <Button fillMode={"flat"} svgIcon={layout2By2Icon} />
-          </ButtonGroup>
-        </section>
-      </Layout>
-      <Layout>
-        <FilterComponent updateUI={updateUI} />
-      </Layout>
-      <Layout>
-        <CardsList data={data} />
-      </Layout>
-    </>
+    <LocalizationProvider language={language}>
+      <>
+        <Layout>
+          <section
+            className="k-d-grid k-grid-cols-12 k-justify-content-center k-align-items-center k-col-span-12"
+            style={{
+              paddingTop: "60px",
+            }}
+          >
+            <OrderedImgText
+              title={title}
+              subtitle={subtitle}
+              contentText={contentText}
+              img="/bracelets.png"
+              order={order}
+              link={null}
+            />
+          </section>
+        </Layout>
+        <Layout>
+          <CustomSection>
+            <CategoryList
+              title={t.ourCollectionsTitle}
+              subtitle={t.ourCollectionsSubtitle}
+              data={cards}
+            />
+          </CustomSection>
+        </Layout>
+        <Layout>
+          <section className="k-d-flex k-justify-content-between">
+            <Breadcrumb data={BreakcrumbData} />
+            <ButtonGroup>
+              <Button fillMode={"flat"} svgIcon={gridLayoutIcon} />
+              <Button fillMode={"flat"} svgIcon={layout2By2Icon} />
+            </ButtonGroup>
+          </section>
+        </Layout>
+        <Layout>
+          <FilterComponent updateUI={updateUI} />
+        </Layout>
+        <Layout>
+          <CardsList data={data} />
+        </Layout>
+      </>
+    </LocalizationProvider>
   );
 };
 
-export default AllProductsListView
+export default AllProductsListView;

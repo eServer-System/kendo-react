@@ -8,7 +8,14 @@ import { OrderedImgText } from '../components/OrderedImageCard';
 import { Testemonials } from '../components/Testemonials';
 import { isAdmin } from "../helpers/adminStore"; 
 import { useStore } from '@nanostores/react';
+import { selectedLanguage } from '../helpers/languageStore';
+import { IntlProvider, loadMessages, LocalizationProvider } from '@progress/kendo-react-intl';
+import messages from '../data/messages'; // Import the messages
 import AdminView from '../components/AdminView'; 
+
+loadMessages(messages['en'], 'en');
+loadMessages(messages['fr'], 'fr');
+loadMessages(messages['es'], 'es');
 
 const data: CardDescriptor[] = [
   { img: '/listViewImages/silverBraceletOnyx.png', collectionText: "Silver Bracelet with Onyx" },
@@ -28,100 +35,115 @@ const watchData: CardDescriptor[] = [
 ];
 
 const Home: React.FC = () => {
-  const title = "Vilora Jewelry";
-  const subtitle = "We offer exquisite jewelry, each showcasing timeless elegance";
-  const buttonText = "See Collections";
   const isAdminValue = useStore(isAdmin);
+  const selectedLang = useStore(selectedLanguage);
+
+  const t = messages[selectedLang] || messages['en']; 
 
   return (
-    <>
-      <BackgroundImage
-        title={title}
-        subtitle={subtitle}
-        buttonText={buttonText}
-        img="/model_1.png"
-      />
+    <LocalizationProvider language={selectedLang}>
+      <IntlProvider locale={selectedLang}>
+        <BackgroundImage
+          title={t.title}
+          subtitle={t.subtitle}
+          buttonText={t.buttonText}
+          img="/model_1.png"
+        />
 
-      {isAdminValue ? (
-        <Layout>
-          <div className="k-mt-8"> 
-            <AdminView />
-          </div>
-        </Layout>
-      ) : (
-        <>
+        {isAdminValue ? (
           <Layout>
-            <section
-              className="k-d-grid k-grid-cols-12 k-justify-content-center k-align-items-center k-col-span-12"
-              style={{ paddingTop: "60px" }}
-            >
-              <CategoryList title='Our Bestsellers' subtitle='Enjoy an excellent selection of fine jewelry' data={data} />
-            </section>
+            <div className="k-mt-8"> 
+              <AdminView />
+            </div>
           </Layout>
-          <Layout>
-            <CustomSection>
-              <OrderedImgText
-                title='Timeless Classics'
-                subtitle='Get our unique handmade collections'
-                contentText='Jewelry enhances style and adds elegance, with each piece telling a unique story.'
-                img="/homeModel2.png"
-                order='first'
-                link="Shop Now"
-              />
-            </CustomSection>
-          </Layout>
-          <Layout>
-            <CustomSection>
-              <OrderedImgText
-                title='Fine Jewelry'
-                subtitle='Get our unique handmade collections'
-                contentText="Jewelry elevates one's style and brings sophistication, with every piece narrating a distinct tale."
-                img="/homeModel3.png"
-                order='last'
-                link="Shop Now"
-              />
-            </CustomSection>
-          </Layout>
-          <Layout>
-            <CustomSection>
-              <CategoryList colSpan={6} title='Our Rings' subtitle='Enjoy an excellent selection of fine rings' data={ringsData} />
-            </CustomSection>
-          </Layout>
-          <Layout>
-            <CustomSection>
-              <OrderedImgText
-                title='Always On Time'
-                subtitle='Get our unique watches'
-                contentText='High-end gold watches for men are the epitome of luxury, combining precision with sophisticated craftsmanship.'
-                img="/homeWatch1.png"
-                order='first'
-                link="Shop Now"
-              />
-            </CustomSection>
-          </Layout>
-          <Layout>
-            <CustomSection>
-              <CategoryList title='Our Watches' subtitle='Enjoy an excellent selection of watches' data={watchData} />
-            </CustomSection>
-          </Layout>
-          <Layout>
-            <CustomSection>
-              <OrderedImgText
-                title='Services'
-                subtitle='Explore expert repairs to elevate your experience'
-                contentText='Vilora provides services like custom designs, repairs, and appraisals to enhance the customer experience.'
-                img="/homeServicesImage.png"
-                order='last'
-                link="Learn More"
-              />
-            </CustomSection>
-          </Layout>
-          <Layout>
-            <Testemonials />
-          </Layout>
-        </>
-      )}
-    </>
+        ) : (
+          <>
+            <Layout>
+              <section
+                className="k-d-grid k-grid-cols-12 k-justify-content-center k-align-items-center k-col-span-12"
+                style={{ paddingTop: "60px" }}
+              >
+                <CategoryList
+                  title={t.bestsellersTitle}
+                  subtitle={t.bestsellersSubtitle}
+                  data={data}
+                />
+              </section>
+            </Layout>
+            <Layout>
+              <CustomSection>
+                <OrderedImgText
+                  title={t.timelessTitle}
+                  subtitle={t.timelessSubtitle}
+                  contentText={t.timelessContent}
+                  img="/homeModel2.png"
+                  order='first'
+                  link={t.buttonText}
+                />
+              </CustomSection>
+            </Layout>
+            <Layout>
+              <CustomSection>
+                <OrderedImgText
+                  title={t.fineJewelryTitle}
+                  subtitle={t.fineJewelrySubtitle}
+                  contentText={t.fineJewelryContent}
+                  img="/homeModel3.png"
+                  order='last'
+                  link={t.buttonText}
+                />
+              </CustomSection>
+            </Layout>
+            <Layout>
+              <CustomSection>
+                <CategoryList
+                  colSpan={6}
+                  title={t.ringsTitle}
+                  subtitle={t.ringsSubtitle}
+                  data={ringsData}
+                />
+              </CustomSection>
+            </Layout>
+            <Layout>
+              <CustomSection>
+                <OrderedImgText
+                  title={t.watchesTitle}
+                  subtitle={t.watchesSubtitle}
+                  contentText={t.watchesContent}
+                  img="/homeWatch1.png"
+                  order='first'
+                  link={t.buttonText}
+                />
+              </CustomSection>
+            </Layout>
+            <Layout>
+              <CustomSection>
+                <CategoryList
+                  title={t.watchesTitle}
+                  subtitle={t.watchesSubtitle}
+                  data={watchData}
+                />
+              </CustomSection>
+            </Layout>
+            <Layout>
+              <CustomSection>
+                <OrderedImgText
+                  title={t.servicesTitle}
+                  subtitle={t.servicesSubtitle}
+                  contentText={t.servicesContent}
+                  img="/homeServicesImage.png"
+                  order='last'
+                  link="Learn More"
+                />
+              </CustomSection>
+            </Layout>
+            <Layout>
+              <Testemonials />
+            </Layout>
+          </>
+        )}
+      </IntlProvider>
+    </LocalizationProvider>
   );
 };
 

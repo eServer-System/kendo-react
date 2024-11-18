@@ -1,6 +1,8 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import ProductDetails from '../../components/ProductDetails';
+import Header from '../../components/Header';
+import Footer from '../../components/Footer';
 import listData from '../../data/listData';
 import { ListDataDescriptor } from '../../data/types';
 
@@ -15,6 +17,7 @@ const product = listData.find((item: ListDataDescriptor) => String(item.id) === 
 ---
 
 <Layout title={`Product ${id}`}>
+ <Header client:load />
   <main>
     {product ? (
       <ProductDetails id={id} product={product} client:only="react" />
@@ -22,4 +25,5 @@ const product = listData.find((item: ListDataDescriptor) => String(item.id) === 
       <div>Product not found</div>
     )}
   </main>
+   <Footer client:load />
 </Layout>

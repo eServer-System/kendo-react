@@ -4,18 +4,26 @@ import { SvgIcon } from "@progress/kendo-react-common";
 import { filterIcon, sortAscIcon } from "@progress/kendo-svg-icons";
 import { FilterDescriptor, SortDescriptor, State } from "@progress/kendo-data-query";
 
-const chips: string[]= ["Bracelets", "Rings", "Earrings", "Watches", "Necklaces"];
-const statuses:  string[] = ["Sale", "Recommended", "Must Have"];
-const materials: string[] = ["Gold", "Silver"];
+import { useStore } from '@nanostores/react';
+import { selectedLanguage } from '../helpers/languageStore';
+import { loadMessages } from '@progress/kendo-react-intl';
+import messages from '../data/messages'; 
+
+loadMessages(messages['en'], 'en');
+loadMessages(messages['fr'], 'fr');
+loadMessages(messages['es'], 'es');
 
 interface FilterComponentProps {
   updateUI: (state: State) => void;
 }
 
 export const FilterComponent: React.FC<FilterComponentProps> = ({ updateUI }) => {
+  const language = useStore(selectedLanguage);
+  const t = messages[language] || messages['en'];
+
   const [categoryValue, setCategoryValue] = useState<string[]>([]);
-  const [statusValue, setStatusValue] = useState<string>("Recommended");
-  const [materialValue, setMaterialValue] = useState<string>("Material");
+  const [statusValue, setStatusValue] = useState<string>(t.statusesData[0]);
+  const [materialValue, setMaterialValue] = useState<string>(t.materialPlaceholder);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -101,8 +109,8 @@ export const FilterComponent: React.FC<FilterComponentProps> = ({ updateUI }) =>
 
   const clearFilters = () => {
     setCategoryValue([]);
-    setStatusValue("Recommended");
-    setMaterialValue("Material");
+    setStatusValue(t.statusesData[0]);
+    setMaterialValue(t.materialPlaceholder);
     updateUI({ filter: undefined, sort: undefined });
   };
 
@@ -110,31 +118,39 @@ export const FilterComponent: React.FC<FilterComponentProps> = ({ updateUI }) =>
     <section className="k-d-flex k-justify-content-between k-align-items-center">
       <span className="k-d-flex k-align-items-center">
         <span className="k-d-flex k-align-items-center k-pr-2">
-          <SvgIcon icon={filterIcon}></SvgIcon> Filter:
+          <SvgIcon icon={filterIcon}></SvgIcon> {t.filterLabel}
         </span>
         <span className="k-pr-2">
           <MultiSelect
-            data={chips}
+            data={t.categoriesData}
             value={categoryValue}
-            placeholder="Category"
+            placeholder={t.categoryPlaceholder}
             onChange={onCategoryChange}
             style={{ minWidth: "119px" }}
           />
         </span>
         <span className="k-pr-2">
-          <DropDownList value={materialValue} data={materials} onChange={onMaterialChange} />
+          <DropDownList
+            value={materialValue}
+            data={[t.materialPlaceholder, ...t.materialsData]}
+            onChange={onMaterialChange}
+          />
         </span>
       </span>
       <span className="k-d-flex k-align-items-center">
         <span className="k-d-flex k-align-items-center k-pr-2">
-          <SvgIcon icon={sortAscIcon}></SvgIcon> Sort by:
+          <SvgIcon icon={sortAscIcon}></SvgIcon> {t.sortByLabel}
         </span>
         <span>
-          <DropDownList data={statuses} value={statusValue} onChange={onStatusChange} />
+          <DropDownList
+            data={t.statusesData}
+            value={statusValue}
+            onChange={onStatusChange}
+          />
         </span>
       </span>
       <button className="k-button k-button-flat" onClick={clearFilters}>
-        Clear Filters
+        {t.clearFiltersButton}
       </button>
     </section>
   );

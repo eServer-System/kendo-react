@@ -16,76 +16,92 @@ import {
   FieldWrapper,
 } from '@progress/kendo-react-form';
 import { Label } from '@progress/kendo-react-labels';
+import { useStore } from '@nanostores/react';
+import { selectedLanguage } from '../helpers/languageStore';
+import {
+  loadMessages,
+  LocalizationProvider,
+} from '@progress/kendo-react-intl';
+import messages from '../data/messages';
+
+loadMessages(messages['en'], 'en');
+loadMessages(messages['fr'], 'fr');
+loadMessages(messages['es'], 'es');
 
 const Contacts: React.FC = () => {
+  const language = useStore(selectedLanguage);
+  const t = messages[language] || messages['en'];
+
   const onSubmitClick = () => {
-    window.location.href = "/thankyou";
+    window.location.href="/thankyou"
   };
 
   return (
-    <Layout>
-      <div className="k-d-flex k-flex-col k-align-items-center k-py-12 k-px-4 k-gap-10">
-        <div className="k-d-grid k-grid-cols-12 k-gap-8 k-w-full">
-          <div className="k-col-span-6 k-col-start-1">
-            <h1>Get in touch</h1>
-            <p>If you have any questions, contact us</p>
-            <Form
-              render={() => (
-                <FormElement>
-                  <div className="k-form-layout k-d-grid k-gap-y-6 k-gap-x-4">
-                    <FieldWrapper className="k-col-span-1">
-                      <Label> Full Name </Label>
-                      <Field name="fullName" component={CardHolder} />
-                    </FieldWrapper>
-                    <FieldWrapper className="k-col-span-1">
-                      <Label> Email </Label>
-                      <Field name="email" component={EmailInput} />
-                    </FieldWrapper>
-                    <FieldWrapper className="k-col-span-1">
-                      <Label> Phone Number </Label>
-                      <Field name="phoneNumber" component={PhoneInput} />
-                    </FieldWrapper>
-                    <div className="k-d-flex k-flex-col k-align-items-start k-gap-4">
-                      <p>Type of customer</p>
-                      <ContactsRadioButtons />
+    <LocalizationProvider language={language}>
+      <Layout>
+        <div className="k-d-flex k-flex-col k-align-items-center k-py-12 k-px-4 k-gap-10">
+          <div className="k-d-grid k-grid-cols-12 k-gap-8 k-w-full">
+            <div className="k-col-span-6 k-col-start-1">
+              <h1>{t.getInTouchTitle}</h1>
+              <p>{t.getInTouchSubtitle}</p>
+              <Form
+                render={() => (
+                  <FormElement>
+                    <div className="k-form-layout k-d-grid k-gap-y-6 k-gap-x-4">
+                      <FieldWrapper className="k-col-span-1">
+                        <Label> {t.fullNameLabel} </Label>
+                        <Field name="fullName" component={CardHolder} />
+                      </FieldWrapper>
+                      <FieldWrapper className="k-col-span-1">
+                        <Label> {t.emailLabel} </Label>
+                        <Field name="email" component={EmailInput} />
+                      </FieldWrapper>
+                      <FieldWrapper className="k-col-span-1">
+                        <Label> {t.phoneNumberLabel} </Label>
+                        <Field name="phoneNumber" component={PhoneInput} />
+                      </FieldWrapper>
+                      <div className="k-d-flex k-flex-col k-align-items-start k-gap-4">
+                        <p>{t.typeOfCustomerLabel}</p>
+                        <ContactsRadioButtons />
+                      </div>
+                      <FieldWrapper className="k-col-span-1">
+                        <Field name="city" component={CityInput} />
+                      </FieldWrapper>
+                      <FieldWrapper className="k-col-span-1">
+                        <Field name="appointment" component={AppointmentInput} />
+                      </FieldWrapper>
+                      <FieldWrapper className="k-col-span-1">
+                        <Label> {t.dateLabel} </Label>
+                        <Field name="date" component={DateChooserInput} />
+                      </FieldWrapper>
                     </div>
-                    <FieldWrapper className="k-col-span-1">
-                      <Field name="city" component={CityInput} />
-                    </FieldWrapper>
-                    <FieldWrapper className="k-col-span-1">
-                      <Field name="appointment" component={AppointmentInput} />
-                    </FieldWrapper>
-                    <FieldWrapper className="k-col-span-1">
-                      <Label> Date </Label>
-                      <Field name="date" component={DateChooserInput} />
-                    </FieldWrapper>
-                  </div>
-                </FormElement>
-              )}
-            />
-            <Button
-              className="k-mt-6"
-              onClick={onSubmitClick}
-              themeColor={'primary'}
-            >
-              Book a Slot
-            </Button>
-          </div>
-          <div className="k-col-span-5 k-col-start-8 k-d-flex k-flex-col k-align-items-start">
-            <img
-              src="/contactsImage.png"
-              alt="Contacts"
-              style={{
-                maxWidth: '630px',
-                maxHeight: '580px',
-                width: '100%',
-                height: 'auto',
-              }}
-            />
+                  </FormElement>
+                )}
+              />
+              <Button
+                className="k-mt-6"
+                onClick={onSubmitClick}
+                themeColor={'primary'}
+              >
+                {t.bookSlotButton}
+              </Button>
+            </div>
+            <div className="k-col-span-5 k-col-start-8 k-d-flex k-flex-col k-align-items-start">
+              <img
+                src='/contactsImage.png'
+                alt={t.contactsImageAlt}
+                style={{
+                  maxWidth: '630px',
+                  maxHeight: '580px',
+                  width: '100%',
+                  height: 'auto',
+                }}
+              />
+            </div>
           </div>
         </div>
-      </div>
-    </Layout>
+      </Layout>
+    </LocalizationProvider>
   );
 };
 
