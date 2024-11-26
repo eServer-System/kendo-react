@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState } from "react";
 import { Layout } from "../components/Layout";
 import { OrderedImgText } from "../components/OrderedImageCard";
 import { CustomSection } from "../components/CustomizedSection";
@@ -6,33 +6,36 @@ import { listData } from "../data/listData";
 import { FilterComponent } from "../components/FilterComponent";
 import { CardsList } from "../components/CardsList";
 import { CategoryList } from "../components/CategoryList";
-import { CardDescriptor } from "../data/types";
-import { DataModel } from "../data/types";
+import { CardDescriptor, DataModel } from "../data/types";
 
 import { Breadcrumb } from "@progress/kendo-react-layout";
 import { Button, ButtonGroup } from "@progress/kendo-react-buttons";
 import { layout2By2Icon, gridLayoutIcon } from "@progress/kendo-svg-icons";
 import { process, State } from "@progress/kendo-data-query";
 
-import { useStore } from '@nanostores/react';
-import { selectedLanguage } from '../helpers/languageStore';
-import { loadMessages, LocalizationProvider } from '@progress/kendo-react-intl';
-import messages from '../data/messages';
+import { useStore } from "@nanostores/react";
+import { selectedLanguage } from "../helpers/languageStore";
+import { loadMessages, LocalizationProvider } from "@progress/kendo-react-intl";
 
-loadMessages(messages['en'], 'en');
-loadMessages(messages['fr'], 'fr');
-loadMessages(messages['es'], 'es');
+import enMessages from "../data/messages/en";
+import frMessages from "../data/messages/fr";
+import esMessages from "../data/messages/es";
 
-export const AllProductsListView = () => {
+loadMessages(enMessages, "en");
+loadMessages(frMessages, "fr");
+loadMessages(esMessages, "es");
+
+const messages = {
+  en: enMessages,
+  fr: frMessages,
+  es: esMessages,
+};
+
+export const AllProductsListView: React.FC = () => {
   const language = useStore(selectedLanguage);
-  const t = messages[language] || messages['en'];
+  const t = messages[language] || messages["en"];
 
-  const title = t.allProductsTitle;
-  const subtitle = t.allProductsSubtitle;
-  const contentText = t.allProductsContentText;
-  const order = "first";
-
-  const [data, setData] = React.useState(listData);
+  const [data, setData] = useState(listData);
 
   const updateUI = (newState: State) => {
     const newData = process(listData, newState);
@@ -54,9 +57,9 @@ export const AllProductsListView = () => {
     },
   ];
 
-  const BreakcrumbData: DataModel[] = [
-    { text: t.breadcrumbHome },
-    { text: t.breadcrumbJewelry },
+  const breadcrumbData: DataModel[] = [
+    { text: t.breadcrumbHome},
+    { text: t.breadcrumbJewelry},
   ];
 
   return (
@@ -65,16 +68,16 @@ export const AllProductsListView = () => {
         <Layout>
           <section
             className="k-d-grid k-grid-cols-12 k-justify-content-center k-align-items-center k-col-span-12"
-            style={{
-              paddingTop: "60px",
-            }}
+            style={{ paddingTop: "60px" }}
           >
             <OrderedImgText
-              title={title}
-              subtitle={subtitle}
-              contentText={contentText}
+              title={t.allProductsTitle}
+              subtitle={t.allProductsSubtitle}
+              contentText={
+                t.allProductsContentText
+              }
               img="/bracelets.png"
-              order={order}
+              order="first"
               link={null}
             />
           </section>
@@ -90,7 +93,7 @@ export const AllProductsListView = () => {
         </Layout>
         <Layout>
           <section className="k-d-flex k-justify-content-between">
-            <Breadcrumb data={BreakcrumbData} />
+            <Breadcrumb data={breadcrumbData} />
             <ButtonGroup>
               <Button fillMode={"flat"} svgIcon={gridLayoutIcon} />
               <Button fillMode={"flat"} svgIcon={layout2By2Icon} />

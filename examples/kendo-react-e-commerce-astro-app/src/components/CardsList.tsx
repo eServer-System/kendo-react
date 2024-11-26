@@ -1,18 +1,28 @@
-import { Badge, BadgeContainer } from "@progress/kendo-react-indicators";
-import { Button } from "@progress/kendo-react-buttons";
-import { cartIcon } from "@progress/kendo-svg-icons";
-import { CardListProps } from "../data/types";
+import React from 'react';
+import { Badge, BadgeContainer } from '@progress/kendo-react-indicators';
+import { Button } from '@progress/kendo-react-buttons';
+import { cartIcon } from '@progress/kendo-svg-icons';
+import { CardListProps } from '../data/types';
 
 import { useStore } from '@nanostores/react';
 import { selectedLanguage } from '../helpers/languageStore';
 import { loadMessages, LocalizationProvider } from '@progress/kendo-react-intl';
-import { messages } from '../data/messages'; // Use named import
 
-loadMessages(messages['en'], 'en');
-loadMessages(messages['fr'], 'fr');
-loadMessages(messages['es'], 'es');
+import enMessages from '../data/messages/en';
+import frMessages from '../data/messages/fr';
+import esMessages from '../data/messages/es';
 
-export const CardsList = (props: CardListProps) => {
+loadMessages(enMessages, 'en');
+loadMessages(frMessages, 'fr');
+loadMessages(esMessages, 'es');
+
+const messages = {
+  en: enMessages,
+  fr: frMessages,
+  es: esMessages,
+};
+
+export const CardsList: React.FC<CardListProps> = (props) => {
   const language = useStore(selectedLanguage);
   const t = messages[language] || messages['en'];
 
@@ -29,69 +39,68 @@ export const CardsList = (props: CardListProps) => {
               key={index}
               className="k-col-span-3 k-text-center k-border k-border-primary k-gap-1 k-pb-5"
             >
-              {item.status != null ? (
+              {item.status ? (
                 <BadgeContainer>
                   <div
                     className="k-d-flex k-justify-content-center k-align-items-center k-rounded-lg"
                     style={{
                       backgroundImage: `url(${item.img})`,
-                      width: "278px",
-                      height: "236px",
-                      backgroundSize: "cover",
-                      backgroundPosition: "center",
-                      backgroundRepeat: "no-repeat",
+                      width: '278px',
+                      height: '236px',
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                      backgroundRepeat: 'no-repeat',
                     }}
                   ></div>
-
-{item.status && (
-  <Badge
-    themeColor="primary"
-    className="k-text-uppercase"
-    position={"inside"}
-    align={{
-      horizontal: "start",
-      vertical: "top",
-    }}
-  >
-    {t.statuses[item.status]}
-  </Badge>
-)}
+                  {item.status && (
+                    <Badge
+                      themeColor="primary"
+                      className="k-text-uppercase"
+                      position={'inside'}
+                      align={{
+                        horizontal: 'start',
+                        vertical: 'top',
+                      }}
+                    >
+                      {t.statuses[item.status] || item.status}
+                    </Badge>
+                  )}
                 </BadgeContainer>
               ) : (
                 <div
                   className="k-d-flex k-justify-content-center k-align-items-center k-rounded-lg"
                   style={{
                     backgroundImage: `url(${item.img})`,
-                    width: "278px",
-                    height: "236px",
+                    width: '278px',
+                    height: '236px',
                   }}
                 ></div>
               )}
               <div>
-                <div className="k-pt-2">{t[item.title]}</div>
+                <div className="k-pt-2">{t[item.title] || item.title}</div>
                 <div className="k-d-flex k-justify-content-center k-gap-xl k-align-items-center k-pt-2">
                   <span>
                     {item.oldPrice && (
                       <span
                         className="k-text-line-through"
                         style={{
-                          paddingRight: "8px",
+                          paddingRight: '8px',
                         }}
                       >{`$${item.oldPrice}`}</span>
                     )}
                     <span
                       style={{
-                        color: "red",
+                        color: 'red',
                       }}
                     >{`$${item.newPrice}`}</span>
                   </span>
                   <span>
                     <Button
-                      fillMode={"outline"}
+                      fillMode={'outline'}
                       svgIcon={cartIcon}
                       onClick={() => onButtonClick(index)}
                     >
-                      {t.buyButtonText}
+                      {t.buyButtonText || 'Buy'}
                     </Button>
                   </span>
                 </div>
@@ -103,3 +112,5 @@ export const CardsList = (props: CardListProps) => {
     </LocalizationProvider>
   );
 };
+
+export default CardsList;

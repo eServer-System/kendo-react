@@ -18,19 +18,29 @@ import {
   loadMessages,
   LocalizationProvider,
 } from "@progress/kendo-react-intl";
-import messages from "../data/messages";
 
-loadMessages(messages["en"], "en");
-loadMessages(messages["fr"], "fr");
-loadMessages(messages["es"], "es");
+import enMessages from "../data/messages/en";
+import frMessages from "../data/messages/fr";
+import esMessages from "../data/messages/es";
+
+const languages = {
+  en: enMessages,
+  fr: frMessages,
+  es: esMessages,
+};
+
+Object.keys(languages).forEach((lang) => {
+  loadMessages(languages[lang], lang);
+});
 
 const Footer: React.FC = () => {
   const language = useStore(selectedLanguage);
-  const t = messages[language] || messages["en"];
+
+  const t = languages[language] || languages["en"] || {};
 
   return (
     <LocalizationProvider language={language}>
-      <section className="k-py-10 k-px-12 header">
+      <section className="k-py-10 k-px-12 footer">
         <div className="k-d-flex k-flex-wrap k-justify-content-between k-gap-8 k-text-align-left">
           <div
             className="k-flex-basis-250 k-flex-grow-1 k-mb-4 k-mt-6"
@@ -39,9 +49,15 @@ const Footer: React.FC = () => {
             <a href="/" className="k-d-block k-mb-4 k-text-align-center">
               <img src="/vilora-logo.png" alt="Logo" />
             </a>
-            <p className="k-m-0">{t.cookiesText}</p>
-            <p className="k-m-0">{t.rightsReservedText}</p>
-            <p className="k-mt-4">{t.subscribeText}</p>
+            <p className="k-m-0">
+              {t.cookiesText}
+            </p>
+            <p className="k-m-0">
+              {t.rightsReservedText}
+            </p>
+            <p className="k-mt-4">
+              {t.subscribeText}
+            </p>
             <Label editorId="email" className="k-sr-only">
               {t.emailPlaceholder}
             </Label>
@@ -51,7 +67,9 @@ const Footer: React.FC = () => {
               suffix={() => (
                 <InputSuffix>
                   <InputSeparator />
-                  <Button themeColor="primary">{t.subscribeButtonText}</Button>
+                  <Button themeColor="primary">
+                    {t.subscribeButtonText}
+                  </Button>
                 </InputSuffix>
               )}
             />
@@ -82,22 +100,30 @@ const Footer: React.FC = () => {
             <h4 className="k-color-primary k-font-bold">
               {t.customerCareTitle}
             </h4>
-            {t.customerCareLinks.map((link: string, index: number) => (
-              <a href="#" className="k-link" key={index}>
-                {link}
-              </a>
-            ))}
+            {Array.isArray(t.customerCareLinks) && t.customerCareLinks.length > 0 ? (
+              t.customerCareLinks.map((link: string, index: number) => (
+                <a href="#" className="k-link" key={index}>
+                  {link}
+                </a>
+              ))
+            ) : (
+              <p>No links available.</p>
+            )}
           </div>
 
           <div className="k-flex-basis-200 k-flex-grow-1 k-d-flex k-flex-col k-gap-4 k-mt-6 k-text-align-center">
             <h4 className="k-color-primary k-font-bold">
               {t.ourCompanyTitle}
             </h4>
-            {t.ourCompanyLinks.map((link: string, index: number) => (
-              <a href="#" className="k-link" key={index}>
-                {link}
-              </a>
-            ))}
+            {Array.isArray(t.ourCompanyLinks) && t.ourCompanyLinks.length > 0 ? (
+              t.ourCompanyLinks.map((link: string, index: number) => (
+                <a href="#" className="k-link" key={index}>
+                  {link}
+                </a>
+              ))
+            ) : (
+              <p>No links available.</p>
+            )}
           </div>
 
           <div
@@ -107,11 +133,15 @@ const Footer: React.FC = () => {
             <h4 className="k-color-primary k-font-bold">
               {t.legalPrivacyTitle}
             </h4>
-            {t.legalPrivacyLinks.map((link: string, index: number) => (
-              <a href="#" className="k-link" key={index}>
-                {link}
-              </a>
-            ))}
+            {Array.isArray(t.legalPrivacyLinks) && t.legalPrivacyLinks.length > 0 ? (
+              t.legalPrivacyLinks.map((link: string, index: number) => (
+                <a href="#" className="k-link" key={index}>
+                  {link}
+                </a>
+              ))
+            ) : (
+              <p>No links available.</p>
+            )}
           </div>
         </div>
       </section>

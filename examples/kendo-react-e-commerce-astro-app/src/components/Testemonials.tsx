@@ -1,17 +1,27 @@
+import React from 'react';
 import { Avatar } from '@progress/kendo-react-layout';
 import { Rating } from '@progress/kendo-react-inputs';
 import { useStore } from '@nanostores/react';
 import { selectedLanguage } from '../helpers/languageStore';
 import { loadMessages, LocalizationProvider } from '@progress/kendo-react-intl';
-import messages from '../data/messages';
 
-loadMessages(messages['en'], 'en');
-loadMessages(messages['fr'], 'fr');
-loadMessages(messages['es'], 'es');
+import enMessages from '../data/messages/en';
+import frMessages from '../data/messages/fr';
+import esMessages from '../data/messages/es';
+
+loadMessages(enMessages, 'en');
+loadMessages(frMessages, 'fr');
+loadMessages(esMessages, 'es');
+
+const messages = {
+  en: enMessages,
+  fr: frMessages,
+  es: esMessages,
+};
 
 export const Testemonials = () => {
   const language = useStore(selectedLanguage);
-  const t = messages[language] || messages['en']; 
+  const t = messages[language] || messages['en'];
 
   return (
     <LocalizationProvider language={language}>
@@ -39,7 +49,9 @@ export const Testemonials = () => {
                     <img src={item.image} className="k-bg-cover" alt={item.name} />
                   </Avatar>
                 </div>
-                <p className="k-paragraph k-col-start-1 k-col-end-4">{item.name}</p>
+                <p className="k-paragraph k-col-start-1 k-col-end-4">
+                  {item.name}
+                </p>
                 <Rating
                   value={item.rating}
                   precision="half"
@@ -56,3 +68,5 @@ export const Testemonials = () => {
     </LocalizationProvider>
   );
 };
+
+export default Testemonials;

@@ -8,11 +8,20 @@ import { ListDataDescriptor, CardDescriptor } from '../data/types';
 import { useStore } from '@nanostores/react';
 import { selectedLanguage } from '../helpers/languageStore';
 import { loadMessages, LocalizationProvider } from '@progress/kendo-react-intl';
-import messages from '../data/messages';
 
-loadMessages(messages['en'], 'en');
-loadMessages(messages['fr'], 'fr');
-loadMessages(messages['es'], 'es');
+import enMessages from '../data/messages/en';
+import frMessages from '../data/messages/fr';
+import esMessages from '../data/messages/es';
+
+loadMessages(enMessages, 'en');
+loadMessages(frMessages, 'fr');
+loadMessages(esMessages, 'es');
+
+const messages = {
+  en: enMessages,
+  fr: frMessages,
+  es: esMessages,
+};
 
 interface ProductDetailsProps {
   id: string;
@@ -33,15 +42,15 @@ export const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
   const data: CardDescriptor[] = [
     {
       img: '/homemadePinkDiamondRing.jpg',
-      collectionText: t.handmadePinkDiamondRing,
+      collectionTextKey: 'handmadePinkDiamondRing',
     },
     {
       img: '/diamondRingPinkRuby.jpg',
-      collectionText: t.diamondRingWithPinkRuby,
+      collectionTextKey: 'diamondRingWithPinkRuby',
     },
     {
       img: '/whiteSandDiamondRing.jpg',
-      collectionText: t.whiteSandDiamondRing,
+      collectionTextKey: 'whiteSandDiamondRing',
     },
   ];
 
@@ -50,18 +59,18 @@ export const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
       <>
         <Layout>
           <ProductCard
-            title={product.title}
+            title={t[product.titleKey] || product.title}
             image={product.img}
             subtitle={t.productSubtitle}
             breadCrumbItem={[
-              { text: t.breadcrumbHome },
-              { text: t.breadcrumbJewelry },
-              { text: t.categories[product.category] || product.category },
+              { text: t.breadcrumbHome},
+              { text: t.breadcrumbJewelry},
+              { text: t.categories[product.categoryKey] || product.category },
             ]}
             rating={product.rating}
-            reviews={t.reviewsText.replace('{0}', '208')}
+            reviews={t.reviewsText.replace('{0}', '208') || `${product.reviews} reviews`}
             price={product.newPrice}
-            description={t.productDescription}
+            description={t[product.descriptionKey] || product.description}
             addToCart={handleAddToCart}
           />
         </Layout>
@@ -70,7 +79,10 @@ export const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
             <CategoryList
               title={t.youMayAlsoLikeTitle}
               subtitle={t.youMayAlsoLikeSubtitle}
-              data={data}
+              data={data.map((item) => ({
+                ...item,
+                collectionText: t[item.collectionTextKey] || item.collectionTextKey,
+              }))}
             />
           </CustomSection>
         </Layout>

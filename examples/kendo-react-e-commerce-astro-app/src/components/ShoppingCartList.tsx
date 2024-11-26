@@ -1,17 +1,27 @@
-import React, { useEffect, useState } from "react";
-import {
-  chevronLeftIcon,
-  trashIcon,
-} from "@progress/kendo-svg-icons";
+import React, { useEffect, useState } from 'react';
+import { chevronLeftIcon, trashIcon } from '@progress/kendo-svg-icons';
 
-import { NumericTextBox } from "@progress/kendo-react-inputs";
-import { Button } from "@progress/kendo-react-buttons";
-import { Layout } from "./Layout";
+import { NumericTextBox } from '@progress/kendo-react-inputs';
+import { Button } from '@progress/kendo-react-buttons';
+import { Layout } from './Layout';
 
 import { useStore } from '@nanostores/react';
 import { selectedLanguage } from '../helpers/languageStore';
-import { LocalizationProvider } from '@progress/kendo-react-intl';
-import messages from '../data/messages'; 
+import { loadMessages, LocalizationProvider } from '@progress/kendo-react-intl';
+
+import enMessages from '../data/messages/en';
+import frMessages from '../data/messages/fr';
+import esMessages from '../data/messages/es';
+
+loadMessages(enMessages, 'en');
+loadMessages(frMessages, 'fr');
+loadMessages(esMessages, 'es');
+
+const messages = {
+  en: enMessages,
+  fr: frMessages,
+  es: esMessages,
+};
 
 export const ShoppingCartList: React.FC = () => {
   const language = useStore(selectedLanguage);
@@ -20,29 +30,29 @@ export const ShoppingCartList: React.FC = () => {
   const [shoppingCart, setShoppingCart] = useState<any[]>([]);
 
   useEffect(() => {
-    const storedCart = JSON.parse(localStorage.getItem("cart") || "[]");
+    const storedCart = JSON.parse(localStorage.getItem('cart') || '[]');
     setShoppingCart(storedCart);
   }, []);
 
   const onBackClick = () => {
-    window.location.href = "/products";
+    window.location.href = '/products';
   };
 
   const onProceedClick = () => {
-    window.location.href = "/paymentdetails";
+    window.location.href = '/paymentdetails';
   };
 
   const updateQuantity = (index: number, value: number) => {
     const updatedCart = [...shoppingCart];
     updatedCart[index].quantity = value;
     setShoppingCart(updatedCart);
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
+    localStorage.setItem('cart', JSON.stringify(updatedCart));
   };
 
   const removeItem = (index: number) => {
     const updatedCart = shoppingCart.filter((_, i) => i !== index);
     setShoppingCart(updatedCart);
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
+    localStorage.setItem('cart', JSON.stringify(updatedCart));
   };
 
   return (
@@ -55,7 +65,7 @@ export const ShoppingCartList: React.FC = () => {
           <div className="k-pb-5">
             <Button
               svgIcon={chevronLeftIcon}
-              fillMode={"flat"}
+              fillMode={'flat'}
               onClick={onBackClick}
             >
               {t.backButtonText}
@@ -68,7 +78,7 @@ export const ShoppingCartList: React.FC = () => {
                 className="k-d-flex k-gap-5 k-justify-content-center k-border-y k-align-items-center k-pb-5"
                 key={item.id}
                 style={{
-                  height: "120px",
+                  height: '120px',
                 }}
               >
                 <img
@@ -76,7 +86,7 @@ export const ShoppingCartList: React.FC = () => {
                   src={item.img}
                   alt={item.title}
                   style={{
-                    maxHeight: "120px",
+                    maxHeight: '120px',
                   }}
                 />
                 <div className="k-d-flex k-justify-content-between k-w-full">
@@ -88,12 +98,12 @@ export const ShoppingCartList: React.FC = () => {
                       onChange={(e) =>
                         updateQuantity(index, e.value ?? item.quantity)
                       }
-                      width={"118px"}
-                      fillMode={"flat"}
+                      width={'118px'}
+                      fillMode={'flat'}
                     />
                     <Button
                       svgIcon={trashIcon}
-                      fillMode={"flat"}
+                      fillMode={'flat'}
                       onClick={() => removeItem(index)}
                     >
                       {t.removeButtonText}
@@ -108,7 +118,11 @@ export const ShoppingCartList: React.FC = () => {
         </Layout>
         {shoppingCart.length > 0 && (
           <Layout>
-            <Button themeColor={"primary"} size={"large"} onClick={onProceedClick}>
+            <Button
+              themeColor={'primary'}
+              size={'large'}
+              onClick={onProceedClick}
+            >
               {t.proceedToCheckoutButtonText}
             </Button>
           </Layout>
