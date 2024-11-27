@@ -18,42 +18,45 @@ import { Breadcrumb } from "@progress/kendo-react-layout";
 import { Button, ButtonGroup } from "@progress/kendo-react-buttons";
 import { layout2By2Icon, gridLayoutIcon } from "@progress/kendo-svg-icons";
 import { process, State } from "@progress/kendo-data-query";
+import { useLanguageContext } from "../helpers/LanguageContext";
 
 export const AllProductsListView = () => {
-  const title = "Fine Selection";
-  const subtitle = "Enjoy the real craftsmanship";
-  const contentText =
-    "Jewelry is a meaningful form of self-expression that enhances personal style and adds beauty to any occasion.";
+  const { t } = useLanguageContext();
+
+  const title = t.allProductsTitle;
+  const subtitle = t.allProductsSubtitle;
+  const contentText = t.allProductsContentText;
   const order = "first";
 
   const [data, setData] = React.useState(listData);
-  
   const updateUI = (newState: State) => {
-    const newData = process(listData, newState)
-    setData(newData.data)
+    const newData = process(listData, newState);
+    setData(newData.data);
   };
 
   const cards: CardDescriptor[] = [
     {
       img: necklace,
-      collectionText: 'Collection "SERENE"',
+      collectionText: t.collectionSerene,
     },
     {
       img: ring,
-      collectionText: 'Collection "AURELIA"',
+      collectionText: t.collectionAurelia,
     },
     {
       img: jewel,
-      collectionText: 'Collection "RAVINA"',
+      collectionText: t.collectionRavina,
     },
   ];
 
-  const BreakcrumbData: DataModel[] = [{
-    text: "Home"
-  },
-  {
-    text: "Jewelry"
-  }]
+  const BreakcrumbData: DataModel[] = [
+    {
+      text: t.breadcrumbHome,
+    },
+    {
+      text: t.breadcrumbJewelry,
+    },
+  ];
 
   return (
     <>
@@ -76,7 +79,11 @@ export const AllProductsListView = () => {
       </Layout>
       <Layout>
         <CustomSection>
-          <CategoryList title="Our Collections" subtitle="Enjoy an excellent selection of fine jewelry" data={cards}></CategoryList>
+          <CategoryList
+            title={t.ourCollectionsTitle}
+            subtitle={t.ourCollectionsSubtitle}
+            data={cards}
+          ></CategoryList>
         </CustomSection>
       </Layout>
       <Layout>

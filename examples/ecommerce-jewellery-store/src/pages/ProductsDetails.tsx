@@ -11,13 +11,15 @@ import whiteSandDiamondRing from "../assets/whiteSandDiamondRing.jpg";
 import { CustomSection } from "../components/CustomizedSection";
 import { useCart } from "../helpers/CartContext";
 import { useNavigate } from "react-router-dom";
+import { useLanguageContext } from "../helpers/LanguageContext";
 
 export const ProductDetails = () => {
   const { id } = useParams();
   const productId = id ? parseInt(id, 10) : null;
 
-  const descriptionText =
-    "Elegant wedding bands featuring lustrous pearls, beautifully set in sleek, timeless bands. These rings offer a unique blend of classic charm and modern sophistication, making them a perfect symbol of everlasting love. The delicate pearls add a touch of grace, creating a refined and distinctive look that’s perfect for a memorable occasion.";
+  const { t } = useLanguageContext();
+
+  const descriptionText = t.productDescription;
   const { addItemToCart } = useCart();
   const productToAdd = listData.find((item) => item.id === productId);
   const navigate = useNavigate();
@@ -32,27 +34,29 @@ export const ProductDetails = () => {
   const data: CardDescriptor[] = [
     {
       img: diamondRingPinkRuby,
-      collectionText: "Diamond Ring with Pink Ruby",
+      collectionText: t.diamondRingWithPinkRuby,
     },
     {
       img: whiteSandDiamondRing,
-      collectionText: "White Sand Diamond Ring",
+      collectionText: t.whiteSandDiamondRing,
     },
     {
       img: homemadePinkDiamondRing,
-      collectionText: "Handmade Pink Diamond Ring",
+      collectionText: t.handmadePinkDiamondRing,
     },
   ];
 
   const BreakcrumbData: DataModel[] = [
     {
-      text: "Home",
+      text: t.breadcrumbHome,
     },
     {
-      text: "Jewelry",
+      text: t.breadcrumbJewelry,
     },
     {
-      text: productToAdd?.category,
+      text: productToAdd?.category
+        ? t.categories[productToAdd.category as keyof typeof t.categories]
+        : "",
     },
   ];
 
@@ -62,10 +66,10 @@ export const ProductDetails = () => {
         <ProductCard
           title={productToAdd?.title}
           image={productToAdd?.img}
-          subtitle="In Platinum with Natural Diamond"
+          subtitle={t.productSubtitle}
           breadCrumbItem={BreakcrumbData}
           rating={productToAdd?.rating}
-          reviews="208 reviews"
+          reviews={t.reviewsText.replace("{0}", "208")}
           price={productToAdd?.newPrice}
           description={descriptionText}
           addToCart={addToCart}
@@ -74,8 +78,8 @@ export const ProductDetails = () => {
       <Layout>
         <CustomSection>
           <CategoryList
-            title="You May Also Like"
-            subtitle="Enjoy an excellent selection of fine jewelry"
+            title={t.youMayAlsoLikeTitle}
+            subtitle={t.youMayAlsoLikeSubtitle}
             data={data}
           ></CategoryList>
         </CustomSection>

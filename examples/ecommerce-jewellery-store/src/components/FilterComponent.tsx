@@ -4,20 +4,19 @@ import { SvgIcon } from "@progress/kendo-react-common";
 import { filterIcon, sortAscIcon } from "@progress/kendo-svg-icons";
 import { FilterDescriptor, SortDescriptor, State } from "@progress/kendo-data-query";
 import { useCategoriesContext } from "../helpers/CategoriesContext";
+import { useLanguageContext } from "../helpers/LanguageContext";
 
-const chips = ["Bracelets", "Rings", "Earrings", "Watches", "Necklaces"];
-const statuses = ["Sale", "Recommended", "Must Have"];
-const materials = ["Gold", "Silver"];
-
-interface FilterComponentProps {
-  updateUI: (state: State) => void;
-}
-
-export const FilterComponent: React.FC<FilterComponentProps> = ({ updateUI }) => {
+const FilterComponent: React.FC<{ updateUI: (state: State) => void }> = ({ updateUI }) => {
   const { selectedCategory, setSelectedCategory } = useCategoriesContext();
+  const { t } = useLanguageContext();
+
   const [categoryValue, setCategoryValue] = React.useState<string[]>([]);
-  const [statusValue, setStatusValue] = React.useState<string>("Recommended");
-  const [materialValue, setMaterialValue] = React.useState<string>("Material");
+  const [statusValue, setStatusValue] = React.useState<string>(t.statusRecommended);
+  const [materialValue, setMaterialValue] = React.useState<string>(t.materialPlaceholder);
+
+  const chips = t.categoriesData || [];
+  const statuses = t.statusesData || [];
+  const materials = t.materialsData || [];
 
   useEffect(() => {
     if (selectedCategory) {
@@ -96,8 +95,8 @@ export const FilterComponent: React.FC<FilterComponentProps> = ({ updateUI }) =>
 
   const clearFilters = () => {
     setCategoryValue([]);
-    setStatusValue("Recommended");
-    setMaterialValue("Material");
+    setStatusValue(t.statusRecommended);
+    setMaterialValue(t.materialPlaceholder);
     setSelectedCategory(null);
     updateUI({ filter: undefined, sort: undefined });
   };
@@ -106,13 +105,13 @@ export const FilterComponent: React.FC<FilterComponentProps> = ({ updateUI }) =>
     <section className="k-d-flex k-justify-content-between k-align-items-center">
       <span className="k-d-flex k-align-items-center">
         <span className="k-d-flex k-align-items-center k-pr-2">
-          <SvgIcon icon={filterIcon}></SvgIcon> Filter:
+          <SvgIcon icon={filterIcon}></SvgIcon> {t.filterLabel}
         </span>
         <span className="k-pr-2">
           <MultiSelect
             data={chips}
             value={categoryValue}
-            placeholder="Category"
+            placeholder={t.categoryPlaceholder}
             onChange={onCategoryChange}
             style={{ minWidth: "119px" }}
           />
@@ -123,13 +122,15 @@ export const FilterComponent: React.FC<FilterComponentProps> = ({ updateUI }) =>
       </span>
       <span className="k-d-flex k-align-items-center">
         <span className="k-d-flex k-align-items-center k-pr-2">
-          <SvgIcon icon={sortAscIcon}></SvgIcon> Sort by:
+          <SvgIcon icon={sortAscIcon}></SvgIcon> {t.sortByLabel}
         </span>
         <span>
           <DropDownList data={statuses} value={statusValue} onChange={onStatusChange} />
         </span>
       </span>
-      <button className="k-button k-button-flat" onClick={clearFilters}>Clear Filters</button>
+      <button className="k-button k-button-flat" onClick={clearFilters}>{t.clearFiltersButton}</button>
     </section>
   );
 };
+
+export default FilterComponent;
