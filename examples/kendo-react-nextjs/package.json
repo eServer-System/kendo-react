@@ -25,7 +25,7 @@
     "@progress/kendo-svg-icons": "^3.1.0",
     "@progress/kendo-theme-default": "^9.1.0",
     "next": "latest",
-    "react": "latest",
+    "react": "18.3.1",
     "react-dom": "latest"
   },
   "devDependencies": {
