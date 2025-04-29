@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",
-    "@astrojs/react": "^3.6.2",
+    "@astrojs/react": "^4.2.6",
     "@nanostores/react": "^0.8.0",
     "@progress/kendo-data-query": "^1.7.0",
     "@progress/kendo-drawing": "^1.21.2",
