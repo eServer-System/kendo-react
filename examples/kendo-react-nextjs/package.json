@@ -24,7 +24,7 @@
     "@progress/kendo-react-treeview": "^8.0.0",
     "@progress/kendo-svg-icons": "^3.1.0",
     "@progress/kendo-theme-default": "^9.1.0",
-    "next": "latest",
+    "next": "14.2.32",
     "react": "latest",
     "react-dom": "latest"
   },
